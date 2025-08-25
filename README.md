@@ -1,7 +1,7 @@
 # Banco de Dados db_revenda_marlon
 
 ## Descrição
-Este projeto contém o schema SQL para o banco de dados db_revenda_marlon, que modela um sistema de revenda de roupas no estilo de um e-commerce. O banco inclui 6 tabelas, com uma tabela de ligação com chave primária composta, restrições adequadas, duas views para facilitar consultas e 10 registros inseridos por tabela.
+Este projeto contém o SQL para o banco de dados db_revenda_marlon, que modela um sistema de revenda de roupas no estilo de um e-commerce. O banco inclui 6 tabelas, com uma tabela de ligação com chave primária composta, restrições adequadas, duas views para facilitar consultas e 10 registros inseridos por tabela.
 
 ## Estrutura do Banco de Dados
 - **Banco**: db_revenda_marlon
@@ -22,14 +22,8 @@ Este projeto contém o schema SQL para o banco de dados db_revenda_marlon, que m
 - Chaves estrangeiras para relacionar tabelas (ex.: id_endereco, id_preco, id_cliente).
 - Chave primária composta em carrinho_produtos (carrinho_id, produto_id).
 
-## Como Usar
-1. Execute o arquivo schema.sql em um SGBD PostgreSQL para criar o banco, tabelas, views e inserir os dados de exemplo.
-2. Consulte as views com:
-   select * from view_carrinho_cliente;
-   select * from view_cliente_endereco;
-3. As views são úteis para telas de carrinho de compras e gerenciamento de clientes.
-
 ## Observações
-- O banco foi projetado para PostgreSQL devido ao uso do tipo ENUM.
-- Os inserts fornecem dados de exemplo para testes.
-- A tabela carrinho_produtos garante a relação entre carrinhos e produtos, permitindo rastreamento detalhado.
+- Os inserts foram feitos por ia, o resto foi a mão.
+
+
+<img width="951" height="747" alt="image" src="https://github.com/user-attachments/assets/93dedde1-629a-43a3-becc-bc596733a68c" />

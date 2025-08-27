@@ -148,5 +148,80 @@ insert into metodo_pagamento (metodos, nome_titular, numero_cartao, validade_car
 insert into metodo_pagamento (metodos, nome_titular, numero_cartao, validade_cartao) values ('boleto', null, null, null);
 insert into metodo_pagamento (metodos, nome_titular, numero_cartao, validade_cartao) values ('cartao_credito', 'ana souza', '4567890123456789', '09/27');
 
-select * from view_carrinho_cliente;
-select * from view_cliente_endereco;
+-- consulta com like
+select * from produtos where nome_produto like '%camiseta%';
+
+-- explain da consulta com like
+explain select * from produtos where nome_produto like '%camiseta%';
+
+-- criar indice para a coluna nome_produto
+create index idx_nome_produto on produtos(nome_produto);
+
+-- refazer consulta com like e explain
+select * from produtos where nome_produto like '%camiseta%';
+explain select * from produtos where nome_produto like '%camiseta%';
+
+-- alterar coluna cor de varchar para int
+alter table produtos alter column cor type int using (case cor when 'azul' then 1 when 'preto' then 2 when 'vermelho' then 3 when 'marrom' then 4 when 'rosa' then 5 when 'branca' then 6 when 'verde' then 7 when 'azul claro' then 8 when 'cinza' then 9 else 0 end);
+
+-- alterar coluna quantidade de int para varchar
+alter table carrinho alter column quantidade type varchar(10);
+
+-- criar usuario marlon com todas as permissoes
+create user marlon with password 'senha123';
+grant all privileges on database db_revenda_marlon to marlon;
+grant all on all tables in schema public to marlon;
+
+-- criar usuario colega com permissao de select na tabela clientes
+create user colega with password 'senha123';
+grant select on clientes to colega;
+
+-- consultas e explains com usuario colega
+set session authorization colega;
+select * from clientes where nome like '%joao%';
+explain select * from clientes where nome like '%joao%';
+create index idx_nome_clientes on clientes(nome);
+select * from clientes where nome like '%joao%';
+explain select * from clientes where nome like '%joao%';
+alter table clientes alter column nome type int using (case when nome = 'joao silva' then 1 else 0 end);
+alter table carrinho alter column quantidade type int using (quantidade::int);
+reset session authorization;
+
+-- consultas com joins (4 grupos, cada um com inner, left e right join)
+-- consulta 1: clientes e endereco
+select cl.nome, e.cidade from clientes cl inner join endereco e on cl.id_endereco = e.endereco_id;
+select cl.nome, e.cidade from clientes cl left join endereco e on cl.id_endereco = e.endereco_id;
+select cl.nome, e.cidade from clientes cl right join endereco e on cl.id_endereco = e.endereco_id;
+
+-- consulta 2: carrinho e clientes
+select c.carrinho_id, cl.nome from carrinho c inner join clientes cl on c.id_cliente = cl.cliente_id;
+select c.carrinho_id, cl.nome from carrinho c left join clientes cl on c.id_cliente = cl.cliente_id;
+select c.carrinho_id, cl.nome from carrinho c right join clientes cl on c.id_cliente = cl.cliente_id;
+
+-- consulta 3: carrinho e preco
+select c.carrinho_id, p.valor from carrinho c inner join preco p on c.id_preco = p.preco_id;
+select c.carrinho_id, p.valor from carrinho c left join preco p on c.id_preco = p.preco_id;
+select c.carrinho_id, p.valor from carrinho c right join preco p on c.id_preco = p.preco_id;
+
+-- consulta 4: produtos e preco
+select pr.nome_produto, p.valor from produtos pr inner join preco p on pr.produto_id = p.id_produto;
+select pr.nome_produto, p.valor from produtos pr left join preco p on pr.produto_id = p.id_produto;
+select pr.nome_produto, p.valor from produtos pr right join preco p on pr.produto_id = p.id_produto;
+
+-- atualizar registros com colunas null
+update produtos set imagem = null where produto_id in (1, 2, 3);
+update metodo_pagamento set numero_cartao = null, validade_cartao = null where metodos = 'pix';
+
+-- reexecutar consultas com join
+select cl.nome, e.cidade from clientes cl inner join endereco e on cl.id_endereco = e.endereco_id;
+select cl.nome, e.cidade from clientes cl left join endereco e on cl.id_endereco = e.endereco_id;
+select cl.nome, e.cidade from clientes cl right join endereco e on cl.id_endereco = e.endereco_id;
+select c.carrinho_id, cl.nome from carrinho c inner join clientes cl on c.id_cliente = cl.cliente_id;
+select c.carrinho_id, cl.nome from carrinho c left join clientes cl on c.id_cliente = cl.cliente_id;
+select c.carrinho_id, cl.nome from carrinho c right join clientes cl on c.id_cliente = cl.cliente_id;
+select c.carrinho_id, p.valor from carrinho c inner join preco p on c.id_preco = p.preco_id;
+select c.carrinho_id, p.valor from carrinho c left join preco p on c.id_preco = p.preco_id;
+select c.carrinho_id, p.valor from carrinho c right join preco p on c.id_preco = p.preco_id;
+select pr.nome_produto, p.valor from produtos pr inner join preco p on pr.produto_id = p.id_produto;
+select pr.nome_produto, p.valor from produtos pr left join preco p on pr.produto_id = p.id_produto;
+select pr.nome_produto, p.valor from produtos pr right join preco p on pr.produto_id = p.id_produto;
